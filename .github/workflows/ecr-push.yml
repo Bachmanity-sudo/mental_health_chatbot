@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write
   contents: read
 
 env:
@@ -15,45 +14,45 @@ env:
 
 jobs:
   build-and-push:
+    name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Check required secrets
         env:
-          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          test -n "$AWS_ROLE_ARN" || { echo "Missing secret: AWS_ROLE_ARN"; exit 1; }
+          test -n "$AWS_ACCESS_KEY_ID" || { echo "Missing secret: AWS_ACCESS_KEY_ID"; exit 1; }
+          test -n "$AWS_SECRET_ACCESS_KEY" || { echo "Missing secret: AWS_SECRET_ACCESS_KEY"; exit 1; }
           test -n "$AWS_REGION" || { echo "Missing secret: AWS_REGION"; exit 1; }
           test -n "$ECR_REPOSITORY" || { echo "Missing secret: ECR_REPOSITORY"; exit 1; }
 
-      - name: Configure AWS creds (OIDC)
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Login to ECR
+      - name: Login to Amazon ECR
         id: ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Verify ECR repository exists
+      - name: Build and push image
+        env:
+          IMAGE_REGISTRY: ${{ steps.ecr.outputs.registry }}
+          IMAGE_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" --region "$AWS_REGION" >/dev/null || {
-            echo "ECR repository $ECR_REPOSITORY not found in $AWS_REGION"; exit 1;
-          }
-
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        run: |
-          IMAGE_URI="${{ steps.ecr.outputs.registry }}/${ECR_REPOSITORY}"
-          TAG_SHA="${{ github.sha }}"
-          docker buildx build \
-            --platform linux/amd64 \
-            -t "${IMAGE_URI}:${TAG_SHA}" \
-            -t "${IMAGE_URI}:latest" \
-            --push .
+          IMAGE_URI="$IMAGE_REGISTRY/$IMAGE_REPOSITORY"
+          docker build \
+            -t "$IMAGE_URI:$IMAGE_TAG" \
+            -t "$IMAGE_URI:latest" \
+            .
+          docker push "$IMAGE_URI:$IMAGE_TAG"
+          docker push "$IMAGE_URI:latest"
