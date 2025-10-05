@@ -1,0 +1,50 @@
+2025-08-30 17:25:21,610 - INFO - Total RAM: 3.86 GB, Available: 1.62 GB
+2025-08-30 17:25:21,610 - INFO - Device: cpu, Quantization: Disabled
+2025-08-30 17:25:21,610 - INFO - Loading model: jblair456/t5-large-mental-health-chat-1
+2025-08-30 17:25:26,572 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-08-30 17:25:29,299 - INFO - Model loaded successfully
+2025-08-30 17:25:29,299 - INFO - Starting Flask server
+2025-08-30 17:25:29,330 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-30 17:25:29,346 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-30 17:25:33,699 - INFO - Serving index page
+2025-08-30 17:25:33,714 - INFO - 127.0.0.1 - - [30/Aug/2025 17:25:33] "GET / HTTP/1.1" 200 -
+2025-08-30 17:25:40,612 - INFO - Raw request data: {"message":"my dog recently and i am very sad"}
+2025-08-30 17:25:40,612 - INFO - Parsed JSON: {'message': 'my dog recently and i am very sad'}
+2025-08-30 17:25:40,612 - INFO - Chat history length: 1
+2025-08-30 17:25:40,681 - INFO - Input tokens: 12
+2025-08-30 17:25:40,681 - INFO - Memory before inference: 2.46/3.86 GB
+2025-08-30 17:26:29,797 - INFO - Response generated successfully
+2025-08-30 17:26:29,828 - INFO - Memory after inference: 3.53/3.86 GB
+2025-08-30 17:26:29,866 - INFO - 127.0.0.1 - - [30/Aug/2025 17:26:29] "POST /chat HTTP/1.1" 200 -
+2025-08-30 17:26:51,358 - INFO - Raw request data: {"message":"my boss wants me back at work, but I am not ready"}
+2025-08-30 17:26:51,358 - INFO - Parsed JSON: {'message': 'my boss wants me back at work, but I am not ready'}
+2025-08-30 17:26:51,358 - INFO - Chat history length: 3
+2025-08-30 17:26:51,474 - INFO - Input tokens: 75
+2025-08-30 17:26:51,490 - INFO - Memory before inference: 3.57/3.86 GB
+2025-08-30 17:28:06,185 - INFO - Response generated successfully
+2025-08-30 17:28:06,226 - INFO - Memory after inference: 3.54/3.86 GB
+2025-08-30 17:28:06,249 - INFO - 127.0.0.1 - - [30/Aug/2025 17:28:06] "POST /chat HTTP/1.1" 200 -
+2025-08-30 18:34:22,413 - INFO - Total RAM: 3.86 GB, Available: 0.29 GB
+2025-08-30 18:34:22,416 - INFO - Device: cpu, Quantization: Disabled
+2025-08-30 18:34:22,417 - INFO - Loading base model: t5-large with adapter: jblair456/t5-large-mental-health-chat-1
+2025-08-30 18:34:30,681 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-08-30 18:34:32,810 - INFO - Model loaded successfully with LoRA adapter
+2025-08-30 18:34:32,812 - INFO - Starting Flask server
+2025-08-30 18:34:32,866 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-08-30 18:34:32,873 - INFO - [33mPress CTRL+C to quit[0m
+2025-08-30 18:34:50,985 - INFO - Serving index page
+2025-08-30 18:34:51,000 - INFO - 127.0.0.1 - - [30/Aug/2025 18:34:51] "GET / HTTP/1.1" 200 -
+2025-08-30 18:37:10,249 - INFO - 127.0.0.1 - - [30/Aug/2025 18:37:10] "POST /chat HTTP/1.1" 200 -
+2025-08-30 19:58:06,198 - INFO - Loading inference pipeline for bigscience/phi-3-128k-instruct
+2025-08-31 06:40:03,162 - INFO - Total RAM: 3.86 GB, Available: 0.28 GB
+2025-08-31 06:40:03,162 - INFO - Device: cpu, Quantization: Disabled
+2025-08-31 06:40:03,162 - INFO - Loading base model: t5-large with adapter: jblair456/t5-large-mental-health-chat-1
+2025-08-31 06:40:08,112 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-08-31 06:40:10,058 - INFO - Model loaded successfully with LoRA adapter
+2025-08-31 06:46:00,518 - INFO - Total RAM: 3.86 GB, Available: 0.51 GB
+2025-08-31 06:46:00,519 - INFO - Device: cpu, Quantization: Disabled
+2025-08-31 06:46:00,519 - INFO - Loading base model: t5-large with adapter: jblair456/t5-large-mental-health-chat-1
+2025-08-31 06:46:05,358 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-08-31 06:46:07,208 - INFO - Model loaded successfully with LoRA adapter

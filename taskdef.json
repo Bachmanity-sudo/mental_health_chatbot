@@ -1,0 +1,24 @@
+{
+  "family": "clarity-td",
+  "requiresCompatibilities": ["FARGATE"],
+  "networkMode": "awsvpc",
+  "cpu": "2048",
+  "memory": "4096",
+  "executionRoleArn": "arn:aws:iam::311719320321:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "web",
+      "image": "311719320321.dkr.ecr.ap-southeast-2.amazonaws.com/flask-llm:v3",
+      "portMappings": [{ "containerPort": 5000 }],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/clarity",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "web"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sessions</title>
+  <style>
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0f1115;color:#e6e6e6}
+    .layout{display:flex;min-height:100vh}
+    #sidebar{width:360px;background:#151822;padding:16px;overflow:auto}
+    #main{flex:1;padding:16px;overflow:auto}
+    h1{font-size:18px;margin:0 0 12px}
+    .btn{border:0;border-radius:8px;padding:10px 12px;background:#2563eb;color:#fff;cursor:pointer}
+    .btn.secondary{background:#374151}
+    .row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    ul{list-style:none;padding:0;margin:8px 0}
+    li{padding:6px 8px;border:1px solid #2a2f3a;border-radius:6px;margin-bottom:6px;word-break:break-all}
+    table{border-collapse:collapse;width:100%;margin-top:8px}
+    th,td{border:1px solid #2a2f3a;padding:8px;text-align:left;vertical-align:top}
+    pre{background:#0b0d12;border:1px solid #2a2f3a;border-radius:8px;padding:12px;overflow:auto}
+    .meta{font-size:12px;opacity:.8}
+    .kv{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;margin-bottom:12px}
+    .code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside id="sidebar">
+      <h1>root</h1>
+      <div class="kv">
+        <div>CWD</div><div class="code" id="cwd">(loading)</div>
+        <div>SESSIONS_DIR</div><div class="code" id="sessionsDir">(loading)</div>
+        <div>messages.json</div><div class="code" id="messagesPath">(loading)</div>
+      </div>
+      <div class="row">
+        <button class="btn" id="refreshMeta">Refresh paths</button>
+        <button class="btn secondary" id="refreshList">Refresh files</button>
+        <a class="btn secondary" href="{{ home_url }}">Back</a>
+      </div>
+      <div class="meta">GET {{ files_url }}</div>
+      <ul id="fileList"></ul>
+    </aside>
+
+    <main id="main">
+      <div class="row">
+        <h1 style="margin:0">messages.json</h1>
+        <button class="btn" id="refreshMessages">Refresh</button>
+        <button class="btn secondary" id="toggleView">Toggle raw/table</button>
+      </div>
+      <div class="meta">GET {{ messages_api }}</div>
+      <div id="tableWrap" style="display:none"></div>
+      <pre id="rawWrap" aria-live="polite"></pre>
+    </main>
+  </div>
+
+  <script>
+    // Server-provided paths (messages.json in project root)
+    const SERVER_META = {{ {'cwd': cwd, 'sessions_dir': sessions_dir, 'messages_json': messages_path} | tojson }};
+    const FILES_URL = {{ files_url | tojson }};
+    const MESSAGES_URL = {{ messages_api | tojson }};
+    const INITIAL_FILES = {{ files | tojson }};
+
+    const elCwd = document.getElementById("cwd");
+    const elSessionsDir = document.getElementById("sessionsDir");
+    const elMessagesPath = document.getElementById("messagesPath");
+    const fileList = document.getElementById("fileList");
+    const rawWrap = document.getElementById("rawWrap");
+    const tableWrap = document.getElementById("tableWrap");
+
+    let showTable = false;
+    let meta = SERVER_META;
+
+    function joinFsPath(dir, name) {
+      if (!dir) return name;
+      const endsWithSlash = /[\/\\]$/.test(dir);
+      return endsWithSlash ? dir + name : dir + (dir.includes("\\") ? "\\" : "/") + name;
+    }
+
+    function showMeta() {
+      elCwd.textContent = meta?.cwd || "";
+      elSessionsDir.textContent = meta?.sessions_dir || "";
+      elMessagesPath.textContent = meta?.messages_json || "";
+    }
+
+    function setRaw(content) { rawWrap.textContent = content; }
+
+    function renderFiles(names) {
+      fileList.innerHTML = "";
+      if (!Array.isArray(names) || names.length === 0) {
+        fileList.innerHTML = "<li>(empty)</li>";
+        return;
+      }
+      for (const n of names) {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="code">${n}</div>
+          <div class="code" style="opacity:.8">${meta ? joinFsPath(meta.sessions_dir, n) : ""}</div>
+        `;
+        fileList.appendChild(li);
+      }
+    }
+
+    function renderTableFromArray(arr) {
+      if (!Array.isArray(arr) || arr.length === 0) {
+        tableWrap.innerHTML = "<div>(no rows)</div>";
+        return;
+      }
+      const cols = Array.from(
+        arr.reduce((set, row) => {
+          if (row && typeof row === "object" && !Array.isArray(row)) {
+            Object.keys(row).forEach(k => set.add(k));
+          }
+          return set;
+        }, new Set())
+      );
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      const trh = document.createElement("tr");
+      cols.forEach(c => { const th = document.createElement("th"); th.textContent = c; trh.appendChild(th); });
+      thead.appendChild(trh);
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      arr.forEach(row => {
+        const tr = document.createElement("tr");
+        cols.forEach(c => {
+          const td = document.createElement("td");
+          const v = row?.[c];
+          td.textContent = typeof v === "object" ? JSON.stringify(v) : String(v ?? "");
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      tableWrap.innerHTML = "";
+      tableWrap.appendChild(table);
+    }
+
+    async function loadFiles() {
+      try {
+        const r = await fetch(FILES_URL, { cache: "no-store" });
+        if (!r.ok) throw new Error(r.status);
+        renderFiles(await r.json());
+      } catch {
+        renderFiles([]);
+      }
+    }
+
+    async function loadMessages() {
+      try {
+        const r = await fetch(MESSAGES_URL, { cache: "no-store" });
+        if (!r.ok) throw new Error(r.status);
+        const data = await r.json();
+        setRaw(JSON.stringify(data, null, 2));
+        renderTableFromArray(Array.isArray(data) ? data : []);
+        applyView();
+      } catch (e) {
+        setRaw(`(not found) ${String(e)}`);
+        tableWrap.innerHTML = "<div>(not found)</div>";
+        applyView();
+      }
+    }
+
+    function applyView() {
+      tableWrap.style.display = showTable ? "block" : "none";
+      rawWrap.style.display = showTable ? "none" : "block";
+    }
+
+    document.getElementById("refreshMeta").addEventListener("click", () => { showMeta(); });
+    document.getElementById("refreshList").addEventListener("click", loadFiles);
+    document.getElementById("refreshMessages").addEventListener("click", loadMessages);
+    document.getElementById("toggleView").addEventListener("click", () => { showTable = !showTable; applyView(); });
+
+    (async () => { showMeta(); renderFiles(INITIAL_FILES); await loadFiles(); await loadMessages(); })();
+  </script>
+</body>
+</html>

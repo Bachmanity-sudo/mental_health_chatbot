@@ -1,70 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T5 Chatbot</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f9; }
-        .chat-container { max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px; background: white; border-radius: 10px; }
-        .chat-box { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; background: #fafafa; }
-        .message { margin: 10px; padding: 10px; border-radius: 5px; }
-        .user { background: #d1e7dd; text-align: right; }
-        .bot { background: #f8d7da; text-align: left; }
-        .input-container { display: flex; }
-        input[type="text"] { flex-grow: 1; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; }
-        button { padding: 10px 20px; margin-left: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Clarity</title>
 </head>
 <body>
-    <div class="chat-container">
-        <h2>T5 Chatbot</h2>
-        <div class="chat-box" id="chat-box">
-            {% for msg in chat_history %}
-                <div class="message {{ 'user' if msg['role'] == 'user' else 'bot' }}">
-                    <strong>{{ msg['role'].capitalize() }}:</strong> {{ msg['content'] }}
-                </div>
-            {% endfor %}
-        </div>
-        <div class="input-container">
-            <input type="text" id="user-input" placeholder="Type your question..." autocomplete="off">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
+  <div class="layout">
+    <nav id="toolbar">
+      <button id="chooseModelBtn" class="icon-btn" title="Choose Model">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 2l9 4.5v11L12 22l-9-4.5v-11L12 2zm0 2.2L5 7v9.2l7 3.5 7-3.5V7l-7-2.8zM7 9h10v2H7V9zm0 4h7v2H7v-2z" fill="currentColor"/>
+        </svg>
+        <span>Choose Model</span>
+        <span id="currentModel" class="badge"></span>
+      </button>
 
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        const userInput = document.getElementById('user-input');
+      <button onclick="newChat()">New Chat</button>
 
-        async function sendMessage() {
-            const question = userInput.value.trim();
-            if (!question) return;
+      <!-- Logs button -->
+	  <button id="logsBtn" title="Logs" onclick="location.href='{{ url_for('sessions_html') }}'">
+	    Logs
+	  </button>
 
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user';
-            userDiv.innerHTML = `<strong>User:</strong> ${question}`;
-            chatBox.appendChild(userDiv);
-            userInput.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+      <!-- If your route is /sessions.html instead, change href to '/sessions.html' -->
 
-            const response = await fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: question })
-            });
-            const data = await response.json();
+      <div id="modelDropdown" class="dropdown hidden">
+        <div class="dropdown-header">Models</div>
+        <div id="modelList" class="dropdown-list"></div>
+      </div>
 
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot';
-            botDiv.innerHTML = `<strong>Bot:</strong> ${data.response}`;
-            chatBox.appendChild(botDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
+      <div class="version">version 1.0k</div>
+    </nav>
+
+    <main class="main">
+      <h1>Clarity</h1>
+
+      <div id="chatbox">
+        {% for msg in chat_history %}
+          <div class="message {{ msg.role }}">
+            <strong>{{ msg.role.capitalize() }}:</strong> {{ msg.content }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="input-container">
+        <input type="text" id="input" placeholder="Type your message..." autocomplete="off" />
+        <button id="send" onclick="sendMessage()" disabled>Send</button>
+      </div>
+      <div id="error"></div>
+    </main>
+  </div>
+
+  <script>
+    const input = document.getElementById('input');
+    const sendButton = document.getElementById('send');
+    const errorDiv = document.getElementById('error');
+    const chatbox = document.getElementById('chatbox');
+
+    const chooseBtn = document.getElementById('chooseModelBtn');
+    const dropdown = document.getElementById('modelDropdown');
+    const modelList = document.getElementById('modelList');
+    const currentModelEl = document.getElementById('currentModel');
+
+    let currentModel = null;
+
+    function setCurrentModel(name) {
+      currentModel = name || null;
+      currentModelEl.textContent = currentModel ? `(${currentModel})` : '';
+      if (currentModel) localStorage.setItem('clarity_model', currentModel);
+    }
+
+    function closeDropdownOnOutsideClick(e) {
+      if (!dropdown.contains(e.target) && !chooseBtn.contains(e.target)) {
+        dropdown.classList.add('hidden');
+        document.removeEventListener('click', closeDropdownOnOutsideClick);
+      }
+    }
+
+    chooseBtn.addEventListener('click', async () => {
+      dropdown.classList.toggle('hidden');
+      if (!dropdown.classList.contains('hidden')) {
+        document.addEventListener('click', closeDropdownOnOutsideClick);
+        await loadModels();
+      }
+    });
+
+    async function loadModels() {
+      modelList.innerHTML = '<div class="dropdown-item">Loading…</div>';
+      try {
+        let models = [];
+        const res = await fetch('/models', { method: 'GET' });
+        if (res.ok) {
+          const data = await res.json();
+          models = Array.isArray(data?.models) ? data.models : [];
+          if (data?.current) setCurrentModel(data.current);
+        }
+        if (!models.length && Array.isArray(window.initialModels)) {
+          models = window.initialModels;
         }
 
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+        if (!models.length) {
+          modelList.innerHTML = '<div class="dropdown-item">No models</div>';
+          return;
+        }
+
+        modelList.innerHTML = '';
+        models.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'dropdown-item';
+          item.textContent = m;
+          item.onclick = async () => {
+            await selectModel(m);
+            dropdown.classList.add('hidden');
+          };
+          modelList.appendChild(item);
         });
-    </script>
+      } catch {
+        modelList.innerHTML = '<div class="dropdown-item">Error</div>';
+      }
+    }
+
+    async function selectModel(modelName) {
+      try {
+        const res = await fetch('/set_model', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ model: modelName })
+        });
+        if (res.ok) setCurrentModel(modelName);
+      } catch {}
+    }
+
+    const saved = localStorage.getItem('clarity_model');
+    if (saved) setCurrentModel(saved);
+
+    input.addEventListener('input', () => {
+      const trimmed = input.value.trim();
+      sendButton.disabled = !trimmed;
+      errorDiv.style.display = 'none';
+    });
+
+    async function sendMessage() {
+      const message = input.value.trim();
+      if (!message) return;
+
+      chatbox.innerHTML += `<div class="message user"><strong>User:</strong> ${message}</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+      input.value = '';
+      sendButton.disabled = true;
+      errorDiv.style.display = 'none';
+
+      const botDiv = document.createElement('div');
+      botDiv.className = 'message bot';
+      botDiv.innerHTML = `<strong>Clarity:</strong> <span class="stream thinking">thinking...</span>`;
+      const span = botDiv.querySelector('.stream');
+      chatbox.appendChild(botDiv);
+      chatbox.scrollTop = chatbox.scrollHeight;
+
+      try {
+        const resp = await fetch('/chat_stream', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ message })
+        });
+
+        if (!resp.ok || !resp.body) {
+          const r = await fetch('/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message })
+          });
+          const data = await r.json();
+          span.classList.remove('thinking');
+          span.textContent = data.response || 'Error';
+          chatbox.scrollTop = chatbox.scrollHeight;
+          return;
+        }
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let gotFirst = false;
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          if (!gotFirst && chunk) {
+            gotFirst = true;
+            span.classList.remove('thinking');
+            span.textContent = '';
+          }
+          span.textContent += chunk;
+          chatbox.scrollTop = chatbox.scrollHeight;
+        }
+      } catch {
+        span.classList.remove('thinking');
+        span.textContent = 'Error';
+      } finally {
+        sendButton.disabled = false;
+      }
+    }
+
+    async function newChat() {
+      try {
+        const response = await fetch('/new_chat', { method: 'POST' });
+        if (response.ok) {
+          chatbox.innerHTML = '';
+          errorDiv.style.display = 'none';
+        }
+      } catch {}
+    }
+
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !sendButton.disabled) sendMessage();
+    });
+  </script>
+
+  <script>
+    window.initialModels = {{ (models | tojson) if models is defined else '[]' }};
+    {% if current_model is defined %}setTimeout(() => { try { setCurrentModel({{ current_model|tojson }}); } catch(e){} }, 0);{% endif %}
+  </script>
 </body>
 </html>

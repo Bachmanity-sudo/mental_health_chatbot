@@ -1,0 +1,21 @@
+# Check images
+docker images
+
+#Login
+aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 311719320321.dkr.ecr.ap-southeast-2.amazonaws.com
+
+#Build
+docker build -t flask-llm .
+
+#Tag
+docker tag flask-llm:latest 311719320321.dkr.ecr.ap-southeast-2.amazonaws.com/flask-llm:v4
+
+#Push
+docker push 311719320321.dkr.ecr.ap-southeast-2.amazonaws.com/flask-llm:v4
+
+#Test image locally - not recommended
+docker run -it --rm -p 5000:5000 flask-llm
+
+#my dog died recently and i feel very sad
+#my boss wants me back at work but I don't think I'm ready
+#what are some strategies to help me cope?
