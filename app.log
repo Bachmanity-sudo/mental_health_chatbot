@@ -12565,3 +12565,136 @@ Traceback (most recent call last):
     with safe_open(checkpoint_files[0], framework="pt") as f:
          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 OSError: The paging file is too small for this operation to complete. (os error 1455)
+2025-10-04 15:20:13,762 - INFO - ENV: local
+2025-10-04 15:20:13,765 - INFO - Total RAM: 3.86 GB, Available: 1.04 GB
+2025-10-04 15:20:13,766 - INFO - Device: cpu, Quantization: Disabled
+2025-10-04 15:20:13,774 - INFO - Loading: T5-large (FT) (seq2seq) base=t5-large adapter=jblair456/t5-large-mental-health-chat-1
+2025-10-04 15:20:13,787 - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-10-04 15:20:13,815 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.111:5000
+2025-10-04 15:20:13,816 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-04 15:20:14,090 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 15:20:14,476 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 15:20:14,846 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 15:20:15,109 - DEBUG - https://huggingface.co:443 "GET /api/models/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 307 130
+2025-10-04 15:20:15,398 - DEBUG - https://huggingface.co:443 "GET /api/models/google-t5/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 404 64
+2025-10-04 15:20:15,706 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/spiece.model HTTP/1.1" 200 0
+2025-10-04 15:20:16,341 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 15:20:20,104 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/generation_config.json HTTP/1.1" 200 0
+2025-10-04 15:20:20,411 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/custom_generate/generate.py HTTP/1.1" 404 0
+2025-10-04 15:20:20,824 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_config.json HTTP/1.1" 307 0
+2025-10-04 15:20:20,840 - DEBUG - https://huggingface.co:443 "HEAD /api/resolve-cache/models/jblair456/t5-large-mental-health-chat-1/6ffc5eab40ff8812c1be401b36e20126e2b111aa/adapter_config.json HTTP/1.1" 200 0
+2025-10-04 15:20:21,132 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_config.json HTTP/1.1" 307 0
+2025-10-04 15:20:21,154 - DEBUG - https://huggingface.co:443 "HEAD /api/resolve-cache/models/jblair456/t5-large-mental-health-chat-1/6ffc5eab40ff8812c1be401b36e20126e2b111aa/adapter_config.json HTTP/1.1" 200 0
+2025-10-04 15:20:21,236 - DEBUG - Loading bitsandbytes native library from: C:\Users\james\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\bitsandbytes\libbitsandbytes_cpu.dll
+2025-10-04 15:20:21,240 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-10-04 15:20:22,361 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_model.safetensors HTTP/1.1" 302 0
+2025-10-04 15:20:22,668 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_model.safetensors HTTP/1.1" 302 0
+2025-10-04 15:20:23,350 - INFO - Model ready
+2025-10-04 15:20:41,468 - INFO - 127.0.0.1 - - [04/Oct/2025 15:20:41] "GET / HTTP/1.1" 200 -
+2025-10-04 15:20:42,777 - INFO - 127.0.0.1 - - [04/Oct/2025 15:20:42] "GET /static/style.css HTTP/1.1" 200 -
+2025-10-04 15:20:45,319 - INFO - /sessions.html list C:\Users\james\mental_health_chatbot\messages.json
+2025-10-04 15:20:45,346 - INFO - 127.0.0.1 - - [04/Oct/2025 15:20:45] "GET /sessions.html HTTP/1.1" 200 -
+2025-10-04 15:20:45,420 - INFO - 127.0.0.1 - - [04/Oct/2025 15:20:45] "GET /logs/files HTTP/1.1" 200 -
+2025-10-04 15:20:45,458 - INFO - 127.0.0.1 - - [04/Oct/2025 15:20:45] "GET /messages HTTP/1.1" 200 -
+2025-10-04 20:50:19,182 - INFO - ENV: local
+2025-10-04 20:50:19,198 - INFO - Total RAM: 3.86 GB, Available: 0.30 GB
+2025-10-04 20:50:19,198 - INFO - Device: cpu, Quantization: Disabled
+2025-10-04 20:50:19,198 - INFO - Using local message store path=C:\Users\james\mental_health_chatbot\messages.json
+2025-10-04 20:50:19,198 - INFO - Loading: T5-large (FT) (seq2seq) base=t5-large adapter=jblair456/t5-large-mental-health-chat-1
+2025-10-04 20:50:19,220 - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-10-04 20:50:19,251 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.111:5000
+2025-10-04 20:50:19,251 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-04 20:50:19,552 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:50:19,837 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:50:20,185 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:50:20,438 - DEBUG - https://huggingface.co:443 "GET /api/models/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 307 130
+2025-10-04 20:50:20,707 - DEBUG - https://huggingface.co:443 "GET /api/models/google-t5/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 404 64
+2025-10-04 20:50:20,986 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/spiece.model HTTP/1.1" 200 0
+2025-10-04 20:50:21,602 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:50:23,235 - ERROR - Initial model load failed
+Traceback (most recent call last):
+  File "C:\Users\james\mental_health_chatbot\app3.py", line 762, in _boot
+    select_model(current_model_name)
+  File "C:\Users\james\mental_health_chatbot\app3.py", line 498, in select_model
+    _load_base_and_adapter(MODEL_REGISTRY[name])
+  File "C:\Users\james\mental_health_chatbot\app3.py", line 485, in _load_base_and_adapter
+    base_model = _load_seq2seq() if mtype == "seq2seq" else _load_causal()
+                 ^^^^^^^^^^^^^^^
+  File "C:\Users\james\mental_health_chatbot\app3.py", line 473, in _load_seq2seq
+    return AutoModelForSeq2SeqLM.from_pretrained(base_id, low_cpu_mem_usage=True).to(device)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\james\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\transformers\models\auto\auto_factory.py", line 600, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\james\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\transformers\modeling_utils.py", line 317, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\james\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\transformers\modeling_utils.py", line 4953, in from_pretrained
+    with safe_open(checkpoint_files[0], framework="pt") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: The paging file is too small for this operation to complete. (os error 1455)
+2025-10-04 20:52:53,018 - INFO - ENV: local
+2025-10-04 20:52:53,034 - INFO - Total RAM: 3.86 GB, Available: 0.95 GB
+2025-10-04 20:52:53,034 - INFO - Device: cpu, Quantization: Disabled
+2025-10-04 20:52:53,034 - INFO - Using local message store path=C:\Users\james\mental_health_chatbot\messages.json
+2025-10-04 20:52:53,034 - INFO - Loading: T5-large (FT) (seq2seq) base=t5-large adapter=jblair456/t5-large-mental-health-chat-1
+2025-10-04 20:52:53,049 - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-10-04 20:52:53,081 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.111:5000
+2025-10-04 20:52:53,081 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-04 20:52:53,362 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:52:53,674 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:52:54,032 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:52:54,290 - DEBUG - https://huggingface.co:443 "GET /api/models/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 307 130
+2025-10-04 20:52:54,548 - DEBUG - https://huggingface.co:443 "GET /api/models/google-t5/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 404 64
+2025-10-04 20:52:54,804 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/spiece.model HTTP/1.1" 200 0
+2025-10-04 20:52:55,413 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:55:24,584 - INFO - ENV: local
+2025-10-04 20:55:24,589 - INFO - Total RAM: 3.86 GB, Available: 1.09 GB
+2025-10-04 20:55:24,589 - INFO - Device: cpu, Quantization: Disabled
+2025-10-04 20:55:24,589 - INFO - Using local message store path=C:\Users\james\mental_health_chatbot\messages.json
+2025-10-04 20:55:24,589 - INFO - Loading: T5-large (FT) (seq2seq) base=t5-large adapter=jblair456/t5-large-mental-health-chat-1
+2025-10-04 20:55:24,608 - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-10-04 20:55:24,634 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.111:5000
+2025-10-04 20:55:24,634 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-04 20:55:24,898 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:55:25,173 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:55:25,490 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/tokenizer_config.json HTTP/1.1" 404 0
+2025-10-04 20:55:25,750 - DEBUG - https://huggingface.co:443 "GET /api/models/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 307 130
+2025-10-04 20:55:26,024 - DEBUG - https://huggingface.co:443 "GET /api/models/google-t5/t5-large/tree/main/additional_chat_templates?recursive=False&expand=False HTTP/1.1" 404 64
+2025-10-04 20:55:26,293 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/spiece.model HTTP/1.1" 200 0
+2025-10-04 20:55:26,836 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/config.json HTTP/1.1" 200 0
+2025-10-04 20:55:30,061 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/generation_config.json HTTP/1.1" 200 0
+2025-10-04 20:55:30,342 - DEBUG - https://huggingface.co:443 "HEAD /t5-large/resolve/main/custom_generate/generate.py HTTP/1.1" 404 0
+2025-10-04 20:55:31,108 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_config.json HTTP/1.1" 307 0
+2025-10-04 20:55:31,123 - DEBUG - https://huggingface.co:443 "HEAD /api/resolve-cache/models/jblair456/t5-large-mental-health-chat-1/6ffc5eab40ff8812c1be401b36e20126e2b111aa/adapter_config.json HTTP/1.1" 200 0
+2025-10-04 20:55:31,402 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_config.json HTTP/1.1" 307 0
+2025-10-04 20:55:31,417 - DEBUG - https://huggingface.co:443 "HEAD /api/resolve-cache/models/jblair456/t5-large-mental-health-chat-1/6ffc5eab40ff8812c1be401b36e20126e2b111aa/adapter_config.json HTTP/1.1" 200 0
+2025-10-04 20:55:31,511 - DEBUG - Loading bitsandbytes native library from: C:\Users\james\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\bitsandbytes\libbitsandbytes_cpu.dll
+2025-10-04 20:55:31,511 - WARNING - The installed version of bitsandbytes was compiled without GPU support. 8-bit optimizers, 8-bit multiplication, and GPU quantization are unavailable.
+2025-10-04 20:55:32,358 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_model.safetensors HTTP/1.1" 302 0
+2025-10-04 20:55:32,752 - DEBUG - https://huggingface.co:443 "HEAD /jblair456/t5-large-mental-health-chat-1/resolve/main/adapter_model.safetensors HTTP/1.1" 302 0
+2025-10-04 20:55:33,440 - INFO - Model ready
+2025-10-04 20:55:45,780 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:45] "GET / HTTP/1.1" 200 -
+2025-10-04 20:55:46,499 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:46] "GET /static/style.css HTTP/1.1" 200 -
+2025-10-04 20:55:48,736 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:48] "GET /sessions.html HTTP/1.1" 200 -
+2025-10-04 20:55:48,806 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:48] "GET /logs/files HTTP/1.1" 200 -
+2025-10-04 20:55:48,806 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:48] "GET /messages HTTP/1.1" 200 -
+2025-10-04 20:55:56,147 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:56] "GET /logs/sessions/2025-10-03T09-25-03Z_0232ad46 HTTP/1.1" 200 -
+2025-10-04 20:55:57,418 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:57] "GET /logs/sessions/2025-09-30T13-02-17Z_f8dfddb8 HTTP/1.1" 200 -
+2025-10-04 20:55:59,322 - INFO - 127.0.0.1 - - [04/Oct/2025 20:55:59] "GET /logs/sessions/2025-09-30T11-13-46Z_7d40fff0 HTTP/1.1" 200 -
+2025-10-04 20:56:00,068 - INFO - 127.0.0.1 - - [04/Oct/2025 20:56:00] "GET /logs/sessions/2025-09-23T10-58-21Z_db64141d HTTP/1.1" 200 -
+2025-10-04 20:56:05,817 - INFO - 127.0.0.1 - - [04/Oct/2025 20:56:05] "GET /logs/sessions/2025-09-30T13-02-17Z_f8dfddb8 HTTP/1.1" 200 -
+2025-10-04 20:56:06,378 - INFO - 127.0.0.1 - - [04/Oct/2025 20:56:06] "GET /logs/sessions/2025-09-30T11-13-46Z_7d40fff0 HTTP/1.1" 200 -
+2025-10-04 20:56:07,880 - INFO - 127.0.0.1 - - [04/Oct/2025 20:56:07] "GET /logs/files HTTP/1.1" 200 -

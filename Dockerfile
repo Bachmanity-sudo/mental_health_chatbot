@@ -11,5 +11,7 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements.txt
 COPY . /app
 WORKDIR /app
 
+RUN chmod +x /app/start.sh
+
 EXPOSE 5000
-CMD ["python3", "app.py"]
+CMD ["/app/start.sh"]
