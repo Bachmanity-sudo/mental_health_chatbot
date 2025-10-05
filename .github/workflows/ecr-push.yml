@@ -20,10 +20,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check required secrets
+        env:
+          AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
         run: |
-          : "${{ secrets.AWS_ROLE_ARN?missing}}"
-          : "${{ secrets.AWS_REGION?missing}}"
-          : "${{ secrets.ECR_REPOSITORY?missing}}"
+          test -n "$AWS_ROLE_ARN" || { echo "Missing secret: AWS_ROLE_ARN"; exit 1; }
+          test -n "$AWS_REGION" || { echo "Missing secret: AWS_REGION"; exit 1; }
+          test -n "$ECR_REPOSITORY" || { echo "Missing secret: ECR_REPOSITORY"; exit 1; }
 
       - name: Configure AWS creds (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
