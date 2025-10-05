@@ -1,4 +1,4 @@
-name: Build and push to ECR
+name: Build and push to ECR3
 
 on:
   push:
@@ -29,11 +29,10 @@ jobs:
         id: ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Verify ECR repository exists
+      - name: Ensure ECR repository exists
         run: |
-          aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" --region "$AWS_REGION" >/dev/null || {
-            echo "ECR repository $ECR_REPOSITORY not found in $AWS_REGION"; exit 1;
-          }
+          aws ecr describe-repositories --repository-names "$ECR_REPOSITORY" --region "$AWS_REGION" >/dev/null 2>&1 || \
+          aws ecr create-repository --repository-name "$ECR_REPOSITORY" --region "$AWS_REGION" >/dev/null
 
       - name: Set up Buildx
         uses: docker/setup-buildx-action@v3
